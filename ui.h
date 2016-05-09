@@ -1,4 +1,10 @@
-//ui.h
+/*
+ * Originally written by Shane MacBride.
+ * Released as Open Source through the MIT License.
+ * Copyright Shane MacBride 2016.
+ * https://github.com/shanemacbride/TextRealm
+ *
+*/
 
 #ifndef _UI_H_
 #define _UI_H_
