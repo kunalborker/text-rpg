@@ -178,7 +178,7 @@ void Guy::modifyCondition(char HUT, int amount)//Health hUnger Thirst
     }
 }
 
-void Guy::printStat(int x)
+void Guy::printStat(int x) const
 {
     cout<<m_stat_name[x]<<": "<<m_stat_level[x];
 }
@@ -188,7 +188,7 @@ int Guy::getTypeInt()
     return m_type;
 }
 
-void Guy::displayInventory()
+void Guy::displayInventory() const
 {
     char hotkeys[6];
     hotkeys[0] = 'F';
@@ -204,7 +204,7 @@ void Guy::displayInventory()
     cout<<endl;
 }
 
-void Guy::displayGear()
+void Guy::displayGear() const
 {
     cout<<"\tHead\t\t"<<m_gear[0]<<'\n';
     cout<<"\tLeft-hand\t"<<m_gear[1]<<'\n';
@@ -219,7 +219,7 @@ void Guy::displayGear()
     cout<<endl;
 }
 
-void Guy::displayEffects()
+void Guy::displayEffects() const
 {
     cout<<'\t'<<m_stat_name[1]<<" Boost\t+"<<calcAttBoost()<<'\n';
     cout<<'\t'<<m_stat_name[2]<<" Boost\t+"<<calcDefBoost()<<'\n';
@@ -227,7 +227,7 @@ void Guy::displayEffects()
     cout<<endl;
 }
 
-void Guy::displayAbilities()
+void Guy::displayAbilities() const
 {
     char hotkey[5];
     hotkey[0] = 'Z';
@@ -242,7 +242,7 @@ void Guy::displayAbilities()
     cout<<endl;
 }
 
-void Guy::printStats()
+void Guy::printStats() const
 {
     int i = 0;
     cout<<endl;
@@ -283,10 +283,9 @@ void Guy::printStats()
     }
 }
 
-string Guy::getBars(int c, int m)//current, max
+string Guy::getBars(int c, int m) const//current, max
 {
     int percent = ((double)c/m)*100;
-    string bars;
     if(percent == 100)
     {
         return "[XXXXXXXXXX]";
@@ -331,7 +330,7 @@ string Guy::getBars(int c, int m)//current, max
     return "[__________]";
 }
 
-void Guy::printCondition()
+void Guy::printCondition() const
 {
     cout<<"\tCondition\n";
     cout<<"\t---------\n";
@@ -359,14 +358,14 @@ void Guy::advanceLevel(string stat_name)
     //cout<<"You just advanced a level in "<<stat_name<<"!"<<endl;
 }
 
-string Guy::getName()
+string Guy::getName() const
 {
-    return m_getName();
+    return m_name;
 }
 
-string Guy::getType()
+string Guy::getType() const
 {
-    return m_getType();
+    return m_typename;
 }
 
 int Guy::getStatNumber(string stat_name)
@@ -466,7 +465,7 @@ void Guy::setWizard()
     m_gear[2] = "Basic Spellbook";//Attack++
 }
 
-int Guy::calcHpBoost()
+int Guy::calcHpBoost() const
 {
     int boost = 0;
     if(m_gear[5] == "Golden Ring")
@@ -476,7 +475,7 @@ int Guy::calcHpBoost()
     return boost;
 }
 
-int Guy::calcDefBoost()
+int Guy::calcDefBoost() const
 {
     int boost = 0;
     //Helmet
@@ -525,7 +524,7 @@ int Guy::calcDefBoost()
     return boost;
 }
 
-int Guy::calcAttBoost()//Attack Boost
+int Guy::calcAttBoost() const//Attack Boost
 {
     int boost = 0;
     //Weapon
@@ -554,16 +553,6 @@ int Guy::calcAttBoost()//Attack Boost
         boost++;
     }
     return boost;
-}
-    
-string Guy::m_getName()
-{
-    return m_name;
-}
-
-string Guy::m_getType()
-{
-    return m_typename;
 }
 
 void Guy::errorCode(int code)
@@ -711,20 +700,23 @@ bool Guy::useItem(char in)//item number
     return false;
 }
 
-void Guy::addPet(string pet)
+void Guy::addPet(const string &pet)
 {
-    for(int i=0; i<10; i++)
+    for(int i=0; i<10; ++i)
     {
         if(m_pets[i] == "None")
         {
             m_pets[i] = pet;
+            //do we want to fill ALL open pet slots with the new pet??
+            //return;
         }
     }
+    //add a check in case all pet slots are full?
 }
 
-bool Guy::checkPet(string check)
+bool Guy::checkPet(const string &check)
 {
-    for(int i=0; i<10; i++)
+    for(int i=0; i<10; ++i)
     {
         if(m_pets[i] == check)
         {

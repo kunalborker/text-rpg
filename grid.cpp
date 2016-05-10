@@ -243,12 +243,12 @@ void Grid::moveDown()
     moves++;
 }
 
-char Grid::getAvatar()
+char Grid::getAvatar() const
 {
     return m_avatar;
 }
 
-string Grid::getDesc()
+string Grid::getDesc() // why does this function mutate as well as access?
 {//cr = 15, cc = 30
     string up, down, left, right;
     up = m_unit_desc(m_iM[cr - 1][cc]);

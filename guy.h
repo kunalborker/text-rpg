@@ -8,7 +8,6 @@
 
 #ifndef _GUY_H_
 #define _GUY_H_
-
 #include <iostream>
 #include <string>
 
@@ -18,28 +17,28 @@ class Guy
 {
     public:
         Guy(string name, int type);
-        void printStat(int);//Prints stat #int
-        void printStats();//Prints all stats
+        void printStat(int) const;//Prints stat #int
+        void printStats() const;//Prints all stats
         void addStat(string);//Adds a statistic
         void advanceLevel(string);
-        string getName();
-        string getType();
+        string getName() const;
+        string getType() const;
         int getTypeInt();
-        void displayAbilities();
-        void displayInventory();
-        void displayGear();
-        void displayEffects();//Gear Effects
+        void displayAbilities() const;
+        void displayInventory() const;
+        void displayGear() const;
+        void displayEffects() const;//Gear Effects
         bool addItem(string);
         bool useItem(char);
-        void printCondition();
+        void printCondition() const;
         void modifyCondition(char, int);//Health/Hunger/Thirst
         bool starving();
         bool dehydrating();
-        int calcAttBoost();
-        int calcDefBoost();
-        int calcHpBoost();
-        void addPet(string);
-        bool checkPet(string);
+        int calcAttBoost() const;
+        int calcDefBoost() const;
+        int calcHpBoost() const;
+        void addPet(const string &);
+        bool checkPet(const string &);
     private:
         string m_name, m_typename;
         string m_abilities[5];
@@ -60,7 +59,7 @@ class Guy
         string m_getName();
         string m_getType();
         void errorCode(int);
-        string getBars(int, int);
+        string getBars(int, int) const;
 };
 
 #endif

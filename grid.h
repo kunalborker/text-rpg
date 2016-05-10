@@ -24,7 +24,7 @@ class Grid
         void moveLeft();
         void moveRight();
         void moveDown();
-        char getAvatar();
+        char getAvatar() const;
         void teleportSpawn();
         char interactWhat();
         void printSign();
