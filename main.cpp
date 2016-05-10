@@ -30,11 +30,12 @@ void gameLoop(Grid gr, Guy g)
 {
     bool game_running = true;
     Ui myui;
-    char c;//command
+    char c, x;//command
     string coa, cob, coc;//Chest Option A,B,C
     myui.updateEvent("Welcome, " + g.getName() + "! Press [4] to see Controls.");
     int gamecounter = 0;
     char engaged = 'N';//None House Monster Person Chest Sign Dungeon
+    //what is meaning of "engaged"?
     while(game_running)
     {
         //int s_since_start = difftime(time(0), myui.start);
@@ -53,7 +54,7 @@ void gameLoop(Grid gr, Guy g)
                 myui.updateEvent("You lose health due to dehydration.");
             }
         }
-        gamecounter++;
+        ++gamecounter;
         clearScreen();
         //int seconds_since_start = difftime(time(0), start);
         //string currenttime = to_string(seconds_since_start);
@@ -101,32 +102,29 @@ void gameLoop(Grid gr, Guy g)
         }
         cout<<endl;
         system("stty raw");//Set terminal to raw mode
-        c=getchar();
+        c=getchar()|32;//bitor by 32 so that input will always be lowercase
         if(engaged == 'N')//not engaged
         {
-            if((c=='w')|(c=='W'))//Move Up
+            switch(c)//tbh at this point we might as well use an array of function pointers
             {
+            //Directional movement
+            case 'w':
                 gr.moveUp();
-                //g.modifyCondition('H', -1);
-                //g.modifyCondition('U', 1);
-                //g.modifyCondition('T', 1);
-            }
-            else if((c=='a')|(c=='A'))//Move Left
-            {
+                break;
+            case 'a':
                 gr.moveLeft();
-            }
-            else if((c=='s')|(c=='S'))//Move Down
-            {
+                break;
+            case 's':
                 gr.moveDown();
-            }
-            else if((c=='d')|(c=='D'))//Move Right
-            {
+                break;
+            case 'd':
                 gr.moveRight();
-            }
-            else if((c=='i')|(c=='I'))//Interact
-            { 
+                break;
+
+            //Interact
+            case 'i': // THIS IS WAY TOO LONG!!
                 //string message(1, gr.interactWhat());
-                char x = gr.interactWhat();
+                x = gr.interactWhat();
                 engaged = gr.interactWhat();
                 if(x == 'N')
                 {
@@ -135,20 +133,21 @@ void gameLoop(Grid gr, Guy g)
                 else if(x == 'H')
                 {
                     myui.updateEvent("You attempt to enter the house...");
-                    if(gr.interactMessage() == 15)//TL H
+                    switch(gr.interactMessage())
                     {
+                    case 15://TL H
                         myui.updateEvent("");
-                    }
-                    else if(gr.interactMessage() == 16)//BL H
-                    {
+                        break;
+                    case 16://BL H
                         myui.updateEvent("");
-                    }
-                    else if(gr.interactMessage() == 17)//BR H
-                    {
+                        break;
+                    case 17://BR H
                         myui.updateEvent("");
-                    }
-                    else if(gr.interactMessage() == 18)//TR H
-                    {
+                        break;
+                    case 18://TR H
+                        myui.updateEvent("");
+                        break;
+                    default:
                         myui.updateEvent("");
                     }
                 }
@@ -245,9 +244,15 @@ void gameLoop(Grid gr, Guy g)
                     {
                     }
                 }
-            }
-            else if((c=='F')|(c=='f')|(c=='G')|(c=='g')|(c=='H')|(c=='h')|(c=='J')|(c=='j')|(c=='K')|(c=='k')|(c=='L')|(c=='l'))//Inventory
-            {
+                break;
+
+            //Items
+            case 'f':
+            case 'g':
+            case 'h':
+            case 'j':
+            case 'k':
+            case 'l':
                 if(g.useItem(c))
                 {
                 }
@@ -255,46 +260,37 @@ void gameLoop(Grid gr, Guy g)
                 {
                     myui.updateEvent("You don't have an item in that inventory slot.");
                 }
-            }
-            else if((c=='Z')|(c=='z')|(c=='X')|(c=='x')|(c=='C')|(c=='c')|(c=='V')|(c=='v')|(c=='B')|(c=='b'))//abilities
-            {
-                if((c=='C')|(c=='c'))
-                {
-                    gr.teleportSpawn();
-                    myui.updateEvent("Teleported to Spawn.");
-                }
-            }
-            else if(c=='1')//Display Inventory
-            {
-                myui.toggle(1);
-            }
-            else if(c=='2')//Display Abilities
-            {
-                myui.toggle(2);
-            }
-            else if(c=='3')//Display Area Description & Levels
-            {
-                myui.toggle(3);
-            }
-            else if(c=='4')//Display Controls
-            {
-                myui.toggle(4);
-            }
-            else if(c=='5')//Display Key
-            {
-                myui.toggle(5);
-            }
-            else if(c=='6')//Display Log
-            {
-                myui.toggle(6);
-            }
-            else if((c=='q')|(c=='Q'))
-            {
+                break;
+
+            //Abilities
+            case 'z':
+                break;
+            case 'x':
+                break;
+            case 'c':
+                gr.teleportSpawn();
+                myui.updateEvent("Teleported to Spawn.");
+                break;
+            case 'v':
+                break;
+            case 'b':
+                break;
+
+            //UI Toggle
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+                myui.toggle(c-'0');
+                break;
+            case 'q':
                 myui.updateEvent("Game quitting.");
+                //we probably want player to confirm that they want to quit...
                 game_running = false;
-            }
-            else//Update latest message
-            {
+                break;
+            default:
                 myui.updateEvent("Invalid command. Press [4] to display Controls.");
             }
         }
@@ -353,7 +349,7 @@ void clearScreen()
 void mainMenu()
 {
     char t = '\t';
-    cout<<">Choices: [N]ew Game [L]oad Game [H]elp [Q]uit"<<endl<<endl;
+    cout<<">Choices: [N]ew Game [L]oad Game [H]elp [Q]uit\n"<<endl;
     string choice;
     while(cin>>choice)
     {
