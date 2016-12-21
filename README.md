@@ -11,7 +11,7 @@ The MIT License (MIT)<br>
 Copyright (c) 2016 Shane MacBride<br>
 Please see LICENSE file for additional information.<br>
 <h2>Links</h2>
-Website: http://www.shanemacbride.com<br>
+Website: https://shanemacbride.github.io/<br>
 Text Realm's Youtube Preview: https://youtu.be/xyogtUPnj90<br>
 Email: contact@shanemacbride.com<br>
 <h2>Contributing</h2>
