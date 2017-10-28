@@ -1,5 +1,5 @@
 # TextRealm
-A complex text-based RPG game in C++<br>
+This terminal-based text game uses text files to load maps and features four bosses to defeat with interactive objects found throughout the map in-game. (Beginner C++ Project)<br>
 ![Screenshot](http://i.imgur.com/c4uObda.png)
 <br>The game incorporates an event log, stats for each character class,<br>
 monster battles, looting, dungeons, and text-file generated maps<br>
