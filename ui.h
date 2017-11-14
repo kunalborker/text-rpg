@@ -20,11 +20,11 @@ using namespace std;
 enum MenuChoice
 {
     m_none      = 0,
-    m_key       = 1,
-    m_controls  = 2,
+    m_key       = 5,
+    m_controls  = 4,
     m_desc      = 3,
-    m_abilities = 4,
-    m_inventory = 5,
+    m_abilities = 2,
+    m_inventory = 1,
     m_events    = 6
 };
 
