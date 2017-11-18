@@ -1,16 +1,41 @@
 CXX = g++
-CXXFLAGS = -g -std=c++11 -Wall -W -pedantic
+CXXFLAGS = -std=c++11 -Wall -W -pedantic
 
-game: main.o guy.o grid.o ui.o
-	$(CXX) -o game main.o guy.o grid.o ui.o
+DEPDIR := .obj
+$(shell mkdir -p $(DEPDIR) >/dev/null)
+DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 
-main.o: main.cpp guy.h grid.h ui.h
+OBJDIR := .obj
 
-guy.o: guy.cpp guy.h grid.h ui.h
+SRCS := $(wildcard *.cpp)
+OBJS := $(patsubst %.cpp,$(OBJDIR)/%.o,$(SRCS))
 
-grid.o: grid.cpp grid.h
+COMPILE = $(CXX) $(DEPFLAGS) $(CXXFLAGS) -c
+POSTCOMPILE = @mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d && touch $@
 
-ui.o: ui.cpp ui.h grid.h guy.h
+.PHONY: release debug clean
+
+release : CXXFLAGS += -O2
+release : game
+
+debug : CXXFLAGS += -g
+debug : game
+
+game : $(OBJS)
+	g++ -o game $(OBJS)
+
+$(OBJDIR)/%.o : %.cpp
+$(OBJDIR)/%.o : %.cpp $(DEPDIR)/%.d
+	$(COMPILE) -o $@ $<
+	$(POSTCOMPILE)
+
+$(DEPDIR)/%.d: ;
+.PRECIOUS: $(DEPDIR)/%.d
+
+include $(wildcard $(patsubst %,$(DEPDIR)/%.d,$(basename $(SRCS))))
 
 clean:
-	rm -f *.o game
+	rm -rf $(OBJDIR)
+	rm -rf $(DEPDIR)
+	rm game
+ 
