@@ -45,136 +45,78 @@ Guy::Guy(string name, int type)
 
 bool Guy::dehydrating()
 {
-    if(m_currentThirst == 100)
+    int dehydrate = m_currentThirst/25;
+
+    if(dehydrate != 0)
     {
-        m_currentHealth = m_currentHealth - 4;
-        if(m_currentHealth <= 0)
+        m_currentHealth -= dehydrate;
+        if(m_currentHealth < 0)
         {
             m_currentHealth = 0;
         }
         return true;
     }
-    else if(m_currentThirst >= 75)
-    {
-        m_currentHealth = m_currentHealth - 3;
-        if(m_currentHealth <=0)
-        {
-            m_currentHealth = 0;
-        }
-        return true;
-    }
-    else if(m_currentThirst >= 50)
-    {
-        m_currentHealth = m_currentHealth - 2;
-        if(m_currentHealth <= 0)
-        {
-            m_currentHealth = 0;
-        }
-        return true;
-    }
-    else if(m_currentThirst >= 25)
-    {
-        m_currentHealth = m_currentHealth - 1;
-        if(m_currentHealth <= 0)
-        {
-            m_currentHealth = 0;
-        }
-        return true;
-    } 
+
     return false;
 }
 
 bool Guy::starving()
 {
-    if(m_currentHunger == 100)
+    int starve = m_currentHunger/25;
+
+    if(starve != 0)
     {
-        m_currentHealth = m_currentHealth - 4;
-        if(m_currentHealth <= 0)
+        m_currentHealth -= starve;
+        if(m_currentHealth < 0)
         {
             m_currentHealth = 0;
         }
         return true;
     }
-    else if(m_currentHunger >= 75)
-    {
-        m_currentHealth = m_currentHealth - 3;
-        if(m_currentHealth <= 0)
-        {
-            m_currentHealth = 0;
-        }
-        return true;
-    }
-    else if(m_currentHunger >= 50)
-    {
-        m_currentHealth = m_currentHealth - 2;
-        if(m_currentHealth <= 0)
-        {
-            m_currentHealth = 0;
-        }
-        return true;
-    }
-    else if(m_currentHunger >= 25)
-    {
-        m_currentHealth = m_currentHealth - 1;
-        if(m_currentHealth <= 0)
-        {
-            m_currentHealth = 0;
-        }
-        return true;
-    }
+
     return false;
 }
 
 void Guy::modifyCondition(char HUT, int amount)//Health hUnger Thirst
 {
-    if(HUT == 'H')
+    switch (HUT)
     {
-        if((amount + m_currentHealth) <= 0)
+    case 'H':
+        m_currentHealth += amount;
+        if (m_currentHealth < 0)
         {
             m_currentHealth = 0;
         }
-        else if((amount + m_currentHealth) >= (m_maxHealth + calcHpBoost()))
+        else if (m_currentHealth > m_maxHealth + calcHpBoost())
         {
             m_currentHealth = m_maxHealth + calcHpBoost();
         }
-        else
-        {
-            m_currentHealth = m_currentHealth + amount;
-        }
-    }
-    else if(HUT == 'U')
-    {
-        if((amount + m_currentHunger) >= 100)
-        {
-            m_currentHunger = 100;
-        }
-        else if((amount + m_currentHunger) <= 0)
+    break;
+    case 'U':
+        m_currentHunger += amount;
+        if (m_currentHunger < 0)
         {
             m_currentHunger = 0;
         }
-        else
+        else if (m_currentHunger > 100)
         {
-            m_currentHunger = m_currentHunger + amount;
+            m_currentHunger = 100;
         }
-    }
-    else if(HUT == 'T')
-    {
-        if((amount + m_currentThirst) >= 100)
-        {
-            m_currentThirst = 100;
-        }
-        else if((amount + m_currentThirst) <= 0)
+    break;
+    case 'T':
+        m_currentThirst += amount;
+        if (m_currentThirst < 0)
         {
             m_currentThirst = 0;
         }
-        else
+        else if (m_currentThirst > 100)
         {
-            m_currentThirst = m_currentThirst + amount;
+            m_currentThirst = 100;
         }
-    }
-    else if(HUT == 'E')//exempt from limits
-    {
+    break;
+    case 'E'://exempt from limits
         m_currentHealth = m_currentHealth + amount;
+    break;
     }
 }
 
@@ -286,48 +228,8 @@ void Guy::printStats() const
 string Guy::getBars(int c, int m) const//current, max
 {
     int percent = ((double)c/m)*100;
-    if(percent == 100)
-    {
-        return "[XXXXXXXXXX]";
-    }
-    else if(percent >= 90)
-    {
-        return "[XXXXXXXXX_]";
-    }
-    else if(percent >= 80)
-    {
-        return "[XXXXXXXX__]";
-    }
-    else if(percent >= 70)
-    {
-        return "[XXXXXXX___]";
-    }
-    else if(percent >= 60)
-    {
-        return "[XXXXXX____]";
-    }
-    else if(percent >= 50)
-    {
-        return "[XXXXX_____]";
-    }
-    else if(percent >= 40)
-    {
-        return "[XXXX______]";
-    }
-    else if(percent >= 30)
-    {
-        return "[XXX_______]";
-    }
-    else if(percent >= 20)
-    {
-        return "[XX________]";
-    }
-    else if(percent >= 10)
-    {
-        return "[X_________]";
-    }
-    //string percentresults = to_string(percent) + "%";
-    return "[__________]";
+
+    return "[" + string(percent/10, 'X') + string(10 - percent/10, '_') + "]";
 }
 
 void Guy::printCondition() const
@@ -382,24 +284,21 @@ int Guy::getStatNumber(string stat_name)
 
 void Guy::checkClass()
 {
-    if(m_type==0)
+    switch (m_type)
     {
+    case 0:
         setArcher();
-    }
-    else if(m_type==1)
-    {
+    break;
+    case 1:
         setWarrior();
-    }
-    else if(m_type==2)
-    {
+    break;
+    case 2:
         setAssassin();
-    }
-    else if(m_type==3)
-    {
+    break;
+    case 3:
         setWizard();
-    }
-    else
-    {
+    break;
+    default:
         errorCode(1);
     }
 }
@@ -579,125 +478,123 @@ bool Guy::addItem(string item)
 bool Guy::useItem(char in)//item number
 {
     int ci = 0;//current item slot
-    if((in=='F')|(in=='f'))//1
+
+    // 'in' is always lowercase
+    switch (in)
     {
+    case 'f':
         ci = 0;
-    }
-    else if((in=='G')|(in=='g'))//2
-    {
+    break;
+    case 'g':
         ci = 1;
-    }
-    else if((in=='H')|(in=='h'))//3
-    {
+    break;
+    case 'h':
         ci = 2;
-    }
-    else if((in=='J')|(in=='j'))//4
-    {
+    break;
+    case 'j':
         ci = 3;
-    }
-    else if((in=='K')|(in=='k'))//5
-    {
+    break;
+    case 'k':
         ci = 4;
-    }
-    else if((in=='L')|(in=='l'))//6
-    {
+    break;
+    case 'l':
         ci = 5;
+    break;
     }
+
     if(m_inventory[ci] == "Empty")
     {
         return false;
     }
-    else if(m_inventory[ci] != "Empty")
+
+    if(m_inventory[ci] == "Apple")
     {
-        if(m_inventory[ci] == "Apple")
-        {
-            m_inventory[ci] = "Empty";
-            modifyCondition('H', 10);
-            //myui.updateEvent("The apple tastes great! +10HP");
-        }
-        else if(m_inventory[ci] == "Chameleon Egg")
-        {
-            m_inventory[ci] = "Empty";
-            addPet("Chameleon");
-            //myui.updateEvent("The Chameleon Egg has hatched!");
-            //myui.updateEvent("The chameleon runs off to your Pet Yard.");
-        }
-        else if(m_inventory[ci] == "Golden Ring")
-        {
-            if(m_gear[5] == "None")
-            {
-                m_inventory[ci] = "Empty";
-            }
-            else
-            {
-                m_inventory[ci] = m_gear[5];
-            }
-            m_gear[5] = "Golden Ring";
-            modifyCondition('E', 5);
-            //myui.updateEvent("As you equip the Golden Ring,");
-            //myui.updateEvent("your health appears to improve...");
-        }
-        else if(m_inventory[ci] == "Kevlar Gloves")
-        {
-            if(m_gear[7] == "None")
-            {
-                m_inventory[ci] = "Empty";
-            }
-            else
-            {
-                m_inventory[ci] = m_gear[7];
-            }
-            m_gear[7] = "Kevlar Gloves";
-        }
-        else if(m_inventory[ci] == "Kevlar Vest")
-        {
-            if(m_gear[3] == "None")
-            {
-                m_inventory[ci] = "Empty";
-            }
-            else
-            {
-                m_inventory[ci] = m_gear[3];
-            }
-            m_gear[3] = "Kevlar Vest";
-        }
-        else if(m_inventory[ci] == "Desert Spider Venom Vaccine")
-        {
-            m_inventory[ci] = "Empty";
-            spiderv = true;
-        }
-        else if(m_inventory[ci] == "Snakeskin Boots")
-        {
-            if(m_gear[8] == "None")
-            {
-                m_inventory[ci] = "Empty";
-            }
-            else
-            {
-                m_inventory[ci] = m_gear[8];
-            }
-            m_gear[8] = "Snakeskin Boots";
-        }
-        else if(m_inventory[ci] == "Amulet of the Snake")
-        {
-            if(m_gear[6] == "None")
-            {
-                m_inventory[ci] = "Empty";
-            }
-            else
-            {
-                m_inventory[ci] = m_gear[6];
-            }
-            m_gear[6] = "Amulet of the Snake";
-        }
-        else if(m_inventory[ci] == "Desert Snake Venom Vaccine")
-        {
-            m_inventory[ci] = "Empty";
-            snakev = true;
-        }//To be added below... all default items..
-        return true;
+        m_inventory[ci] = "Empty";
+        modifyCondition('H', 10);
+        //myui.updateEvent("The apple tastes great! +10HP");
     }
-    return false;
+    else if(m_inventory[ci] == "Chameleon Egg")
+    {
+        m_inventory[ci] = "Empty";
+        addPet("Chameleon");
+        //myui.updateEvent("The Chameleon Egg has hatched!");
+        //myui.updateEvent("The chameleon runs off to your Pet Yard.");
+    }
+    else if(m_inventory[ci] == "Golden Ring")
+    {
+        if(m_gear[5] == "None")
+        {
+            m_inventory[ci] = "Empty";
+        }
+        else
+        {
+            m_inventory[ci] = m_gear[5];
+        }
+        m_gear[5] = "Golden Ring";
+        modifyCondition('E', 5);
+        //myui.updateEvent("As you equip the Golden Ring,");
+        //myui.updateEvent("your health appears to improve...");
+    }
+    else if(m_inventory[ci] == "Kevlar Gloves")
+    {
+        if(m_gear[7] == "None")
+        {
+            m_inventory[ci] = "Empty";
+        }
+        else
+        {
+            m_inventory[ci] = m_gear[7];
+        }
+        m_gear[7] = "Kevlar Gloves";
+    }
+    else if(m_inventory[ci] == "Kevlar Vest")
+    {
+        if(m_gear[3] == "None")
+        {
+            m_inventory[ci] = "Empty";
+        }
+        else
+        {
+            m_inventory[ci] = m_gear[3];
+        }
+        m_gear[3] = "Kevlar Vest";
+    }
+    else if(m_inventory[ci] == "Desert Spider Venom Vaccine")
+    {
+        m_inventory[ci] = "Empty";
+        spiderv = true;
+    }
+    else if(m_inventory[ci] == "Snakeskin Boots")
+    {
+        if(m_gear[8] == "None")
+        {
+            m_inventory[ci] = "Empty";
+        }
+        else
+        {
+            m_inventory[ci] = m_gear[8];
+        }
+        m_gear[8] = "Snakeskin Boots";
+    }
+    else if(m_inventory[ci] == "Amulet of the Snake")
+    {
+        if(m_gear[6] == "None")
+        {
+            m_inventory[ci] = "Empty";
+        }
+        else
+        {
+            m_inventory[ci] = m_gear[6];
+        }
+        m_gear[6] = "Amulet of the Snake";
+    }
+    else if(m_inventory[ci] == "Desert Snake Venom Vaccine")
+    {
+        m_inventory[ci] = "Empty";
+        snakev = true;
+    }//To be added below... all default items..
+
+    return true;
 }
 
 void Guy::addPet(const string &pet)

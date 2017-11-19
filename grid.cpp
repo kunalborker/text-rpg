@@ -46,109 +46,94 @@ Grid::Grid(char avatar, string map)
             snakez>>m_vS[row][column];
         }
     }
+
+    m_interactables.emplace_back(1, 3, 13);    // Top Left Sign
+    m_interactables.emplace_back(2, 3, 176);   // Top Right Sign
+    m_interactables.emplace_back(3, 45, 178);  // Bottom Right Sign
+    m_interactables.emplace_back(4, 43, 14);   // Bottom Left Sign
+    m_interactables.emplace_back(5, 7, 176);   // Top Right Dungeon
+    m_interactables.emplace_back(6, 40, 176);  // Bottom Right Dungeon
+    m_interactables.emplace_back(7, 38, 20);   // Bottom Left Dungeon
+    m_interactables.emplace_back(8, 8, 20);    // Top Left Dungeon
+    m_interactables.emplace_back(9, 2, 100);   // Top Dungeon
+    m_interactables.emplace_back(10, 46, 98);  // Bottom Dungeon
+    m_interactables.emplace_back(11, 23, 104); // Starter chest
+    m_interactables.emplace_back(12, 34, 48);  // BL C in Trees
+    m_interactables.emplace_back(13, 18, 160); // TR C in Trees
+    m_interactables.emplace_back(14, 13, 78);  // Person Top in Trees
+    m_interactables.emplace_back(15, 9, 33);   // TL H
+    m_interactables.emplace_back(16, 32, 32);  // BL H
+    m_interactables.emplace_back(17, 36, 188); // BR H
+    m_interactables.emplace_back(18, 4, 160);  // TR H
+
+    m_unit_desc['T'] = "Tree";
+    m_unit_desc['H'] = "House";
+    m_unit_desc['M'] = "Monster";
+    m_unit_desc['P'] = "Person";
+    m_unit_desc['C'] = "Chest";
+    m_unit_desc['S'] = "Sign";
+    m_unit_desc['D'] = "Dungeon";
 }
 
 int Grid::interactMessage()
 {
-    if(ir == 3 && ic == 13)//Top Left Sign
+    for (const Interactable& element : m_interactables)
     {
-        return 1;
-    }
-    else if(ir == 3 && ic == 176)//Top Right Sign
-    {
-        return 2;
-    }
-    else if(ir == 45 && ic == 178)//Bottom Right Sign
-    {
-        return 3;
-    }
-    else if(ir == 43 && ic == 14)//Bottom Left Sign
-    {
-        return 4;
-    }
-    else if(ir == 7 && ic == 176)//Top Right Dugeon
-    {
-        return 5;
-    }
-    else if(ir == 40 && ic == 176)//Bottom Right Dungeon
-    {
-        return 6;
-    }
-    else if(ir == 38 && ic == 20)//Bottom Left Dungeon
-    {
-        return 7;
-    }
-    else if(ir == 8 && ic == 20)//Top Left Dungeon
-    {
-        return 8;
-    }
-    else if(ir == 2 && ic == 100)//Top Dungeon
-    {
-        return 9;
-    }
-    else if(ir == 46 && ic == 98)//Bottom Dungeon
-    {
-        return 10;
-    }
-    else if(ir == 23 && ic == 104)//Starter chest
-    {
-        return 11;
-    }
-    else if(ir == 34 && ic == 48)//BL C in Trees
-    {
-        return 12;
-    }
-    else if(ir == 18 && ic == 160)//TR C in Trees
-    {
-        return 13;
-    }
-    else if(ir == 13 && ic == 78)//Person Top in Trees
-    {
-        return 14;
-    }
-    else if(ir == 9 && ic == 33)//TL H
-    {
-        return 15;
-    }
-    else if(ir == 32 && ic == 32)//BL H
-    {
-        return 16;
-    }
-    else if(ir == 36 && ic == 188)//BR H
-    {
-        return 17;
-    }
-    else if(ir == 4 && ic == 160)//TR H
-    {
-        return 18;
+        if (ir == element.row && ic == element.column)
+        {
+            return element.id;
+        }
     }
     return 0;
 }
 
 void Grid::printSign()
 {
-    for(int row = 0; row < 29; row++)
+    /** This approach repeats a bit of code but it isn't good having unnecessary
+        branching( if, switch, etc ) inside long loops.                          */
+
+    switch (interactMessage())
     {
-        for(int column = 0; column < 59; column++)
+    case 1: //smugglers TL
+        for(int row = 0; row < 29; row++)
         {
-            if(interactMessage() == 1)//smugglers TL
+            for(int column = 0; column < 59; column++)
             {
                 cout<<m_bS[row][column];
             }
-            else if(interactMessage() == 2)
-            {
-                cout<<m_sS[row][column];//spiders TR
-            }
-            else if(interactMessage() == 3)
-            {
-                cout<<m_nS[row][column];//BR natives
-            }
-            else
-            {
-                cout<<m_vS[row][column];//BL snakes
-            }
+            cout<<endl;
         }
-        cout<<endl;
+    break;
+    case 2: //spiders TR
+        for(int row = 0; row < 29; row++)
+        {
+            for(int column = 0; column < 59; column++)
+            {
+                cout<<m_sS[row][column];
+            }
+            cout<<endl;
+        }
+    break;
+    case 3: //BR natives
+        for(int row = 0; row < 29; row++)
+        {
+            for(int column = 0; column < 59; column++)
+            {
+                cout<<m_nS[row][column];
+            }
+            cout<<endl;
+        }
+    break;
+    case 4: //BL snakes
+        for(int row = 0; row < 29; row++)
+        {
+            for(int column = 0; column < 59; column++)
+            {
+                cout<<m_vS[row][column];
+            }
+            cout<<endl;
+        }
+    break;
     }
 }
 
@@ -158,7 +143,7 @@ void Grid::teleportSpawn()
     cr = sr;
     cc = sc;
 }
-    
+
 void Grid::setCrCc(char startingposition)
 {
     for(int row = 0; row < 50; row++)
@@ -182,19 +167,42 @@ void Grid::printGrid()
 {
     int row, column;
     m_iM[cr][cc] = m_avatar;
-    for (row = cr - 15; row < cr + 14; row++)//[0, 29]
+
+    /** Same here as in printSign(), I remove unnecessary branching by splitting
+        the loop into multiple parts.                                            */
+
+    row = cr - 15;
+
+    // Prints empty rows above grid
+    for (; row < 0; row++)
     {
-        for (column = cc - 30; column < cc + 29; column++)//[0, 59]
+        cout<<endl;
+    }
+
+    int maxRow = min(50, cr + 14);
+    for (; row < maxRow; row++)
+    {
+        column = cc - 30;
+
+        // Prints empty columns left of grid
+        for (; column < 0; column++)
         {
-            if( (row < 0) || (column < 0) || (row > 49) || (column > 199))
-            {
-                cout<<' ';
-            }
-            else
-            {
-                cout<<m_iM[row][column];
-            }
+            cout<<' ';
         }
+
+        int maxColumn = min(200, cc + 29);
+        for (; column < maxColumn; column++)
+        {
+            cout<<m_iM[row][column];
+        }
+        cout<<endl;
+
+        // The empty columns right of grid are printed automatically
+    }
+
+    // Prints empty rows below grid
+    for (; row < cr + 14; row++)
+    {
         cout<<endl;
     }
 }
@@ -251,10 +259,10 @@ char Grid::getAvatar() const
 string Grid::getDesc() // why does this function mutate as well as access?
 {//cr = 15, cc = 30
     string up, down, left, right;
-    up = m_unit_desc(m_iM[cr - 1][cc]);
-    left = m_unit_desc(m_iM[cr][cc - 1]);
-    right = m_unit_desc(m_iM[cr][cc + 1]);
-    down = m_unit_desc(m_iM[cr + 1][cc]);
+    up = unit_desc(m_iM[cr - 1][cc]);
+    left = unit_desc(m_iM[cr][cc - 1]);
+    right = unit_desc(m_iM[cr][cc + 1]);
+    down = unit_desc(m_iM[cr + 1][cc]);
     m_desc = "\tAbove: " + up + "\tLeft: " + left + "\n\tBelow: " + down + "\tRight: " + right;
     //cout<<"IC:"<<ic<<"IR:"<<ir<<endl; //interacted-last shortcut viewing
     return m_desc;
@@ -267,29 +275,30 @@ char Grid::interactWhat()
     position[1] = m_iM[cr][cc - 1];//left
     position[2] = m_iM[cr][cc + 1];//right
     position[3] = m_iM[cr + 1][cc];//down
+
     for(int i=0; i<4; i++)
     {
-        if((position[i] == 'H')|(position[i]=='M')|(position[i]=='P')|(position[i]=='C')|(position[i]=='S')|(position[i]=='D'))
+        if(position[i] == 'H' || position[i] == 'M' || position[i] == 'P' ||
+           position[i] == 'C' || position[i] == 'S' || position[i] == 'D')
         {
-            if(i==0)
+            switch (i)
             {
+            case 0:
                 ir = cr -1;
                 ic = cc;
-            }
-            else if(i==1)
-            {
+            break;
+            case 1:
                 ir = cr;
                 ic = cc - 1;
-            }
-            else if(i==2)
-            {
+            break;
+            case 2:
                 ir = cr;
                 ic = cc + 1;
-            }
-            else if(i==3)
-            {
+            break;
+            case 3:
                 ir = cr + 1;
                 ic = cc;
+            break;
             }
             return position[i];
         }
@@ -297,37 +306,21 @@ char Grid::interactWhat()
     return 'N';
 }
 
-string Grid::m_unit_desc(char unit)
+string Grid::unit_desc(char unit)
 {
-    if(unit == 'T')
+    string desc;
+
+    auto iter = m_unit_desc.find(unit);
+    if (iter != m_unit_desc.end())
     {
-        return "Tree";
+        desc = iter->second;
     }
-    else if(unit == 'H')
+    else
     {
-        return "House";
+        desc = "None";
     }
-    else if(unit == 'M')
-    {
-        return "Monster";
-    }
-    else if(unit == 'P')
-    {
-        return "Person";
-    }
-    else if(unit == 'C')
-    {
-        return "Chest";
-    }
-    else if(unit == 'S')
-    {
-        return "Sign";
-    }
-    else if(unit == 'D')
-    {
-        return "Dungeon";
-    }
-    return "None";
+
+    return desc;
 }
 
 void Grid::printChest()
@@ -384,7 +377,7 @@ void Grid::loadEmpty(char a)
     m_iM[15][29] = 'L';
     m_iM[14][30] = 'U';
     m_iM[16][30] = 'D';
-    m_iM[15][30] = a;    
+    m_iM[15][30] = a;
     m_iM[10][12] = 'B';
     m_iM[23][26] = 'C';
 }

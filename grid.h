@@ -11,6 +11,8 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
+#include <map>
 
 using namespace std;
 
@@ -44,7 +46,20 @@ class Grid
         char m_sS[29][59];//spiders sign
         void setCrCc(char);
         void loadEmpty(char);
-        string m_unit_desc(char);
+        string unit_desc(char);
+
+        struct Interactable
+        {
+            Interactable(int _id, int r, int c)
+            : id(_id), row(r), column(c)
+            {}
+
+            int id;
+            int row;
+            int column;
+        };
+        vector<Interactable> m_interactables;
+        map<char, string> m_unit_desc;
 };
 
 #endif
