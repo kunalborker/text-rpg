@@ -24,8 +24,6 @@ void gameLoop();
 void mainMenu();
 void breakTime(int seconds);
 
-//time_t start = time(0);
-
 void gameLoop(Grid gr, Guy g)
 {
     bool game_running = true;
@@ -35,14 +33,11 @@ void gameLoop(Grid gr, Guy g)
     myui.updateEvent("Welcome, " + g.getName() + "! Press [4] to see Controls.");
     int gamecounter = 0;
     char engaged = 'N';//None House Monster Person Chest Sign Dungeon
-    //what is meaning of "engaged"?
+
     while(game_running)
     {
-        //int s_since_start = difftime(time(0), myui.start);
-        //if((s_since_start % 30 == 0)&&(gamecounter >= displacement))
         if((gr.moves % 100 == 0) && (gr.moves > 0))
         {//Every _ moves (After starting)
-            //displacement = gamecounter + 30;
             g.modifyCondition('T', 1);//Thirst goes up _%
             g.modifyCondition('U', 1);//Hunger goes up _%
             if(g.starving())//Adjust Health accordingly
@@ -56,53 +51,49 @@ void gameLoop(Grid gr, Guy g)
         }
         ++gamecounter;
         clearScreen();
-        //int seconds_since_start = difftime(time(0), start);
-        //string currenttime = to_string(seconds_since_start);
-        //myui.updateEvent(currenttime);
+
         if(engaged == 'N')//not engaged
         {
             myui.displayUI(g, gr);
+            gr.printGrid();
         }
         else//engaged
         {
             myui.displayEngagedEvents();
-        }
-        if(engaged == 'N')
-        {
-            gr.printGrid();
-        }
-        else if(engaged == 'H')
-        {
-        }
-        else if(engaged == 'M')
-        {
-        }
-        else if(engaged == 'P')
-        {
-        }
-        else if(engaged == 'C')
-        {//11 Starter C -- 12 BL C in Trees -- 13 TR C in Trees
-            gr.printChest();//15 out of 30 lines to be printed
-            if(gr.interactMessage() == 11)//coa,cob,coc Chest Option A,B,C
-            {//Print chest options
-            }
-            else if(gr.interactMessage() == 12)
+            switch (engaged)
             {
+            case 'H':
+            break;
+            case 'M':
+            break;
+            case 'P':
+            break;
+            case 'C': //11 Starter C -- 12 BL C in Trees -- 13 TR C in Trees
+                gr.printChest();//15 out of 30 lines to be printed
+                switch (gr.interactMessage()) //coa,cob,coc Chest Option A,B,C
+                {
+                case 11: //Print chest options
+                break;
+                case 12:
+                break;
+                case 13:
+                break;
+                }
+            break;
+            case 'S':
+                gr.printSign();
+            break;
+            case 'D':
+            break;
             }
-            else if(gr.interactMessage() == 13)
-            {
-            }
         }
-        else if(engaged == 'S')
-        {
-            gr.printSign();
-        }
-        else if(engaged == 'D')
-        {
-        }
+
         cout<<endl;
+
         system("stty raw");//Set terminal to raw mode
-        c=getchar()|32;//bitor by 32 so that input will always be lowercase
+        c = tolower(getchar());
+        system("stty cooked");//reset terminal to cooked mode
+
         if(engaged == 'N')//not engaged
         {
             switch(c)//tbh at this point we might as well use an array of function pointers
@@ -166,16 +157,16 @@ void gameLoop(Grid gr, Guy g)
                 else if(x == 'C')
                 {
                     myui.updateEvent("You attempt to open the chest...");
-                    if(gr.interactMessage() == 11)//Starter Chest
+                    switch (gr.interactMessage())
                     {
+                    case 11: //Starter Chest
                         myui.updateEvent("...it opens!");
                         myui.updateEvent("Press <F> to finish looting.");
                         coa = "Golden Ring";//5 HP + 5
                         cob = "Apple";//Heal 10
                         coc = "Chameleon Egg";
-                    }
-                    else if(gr.interactMessage() == 12)//BL C in Trees (snakes)
-                    {
+                    break;
+                    case 12: //BL C in Trees (snakes)
                         myui.updateEvent("...there's a small snake guarding it.");
                         myui.updateEvent("The snake bites you as it runs away!");
                         myui.updateEvent("-1 Health Point");
@@ -186,62 +177,58 @@ void gameLoop(Grid gr, Guy g)
                         //upon completion of Snake Dungeon
                         //6 Defense + 4 Attack + 4
                         coc = "Desert Snake Venom Vaccine";//Quest Item
-                    }
-                    else if(gr.interactMessage() == 13)//TR C in Trees (spiders)
-                    {
+                    break;
+                    case 13: //TR C in Trees (spiders)
                         myui.updateEvent("...it's covered in spider webs.");
                         myui.updateEvent("The chest opens after clearing the webs!");
                         myui.updateEvent("Press <F> to finish looting.");
                         coa = "Kevlar Gloves";//7 Defense + 5
                         cob = "Kevlar Vest";//3 Defense + 10
                         coc = "Desert Spider Venom Vaccine";//Quest item
+                    break;
                     }//All of the above equippables have been added
                      //to calc_Boost() Functions in guy.cpp... Apple, Eggs, Quests not done yet
                 }
                 else if(x == 'S')
                 {
                     myui.updateEvent("You attempt to read the sign...");
-                    if(gr.interactMessage() == 1)//TL
+                    switch (gr.interactMessage())
                     {
+                    case 1: //TL
                         myui.updateEvent("...it appears to say something about smugglers.");
                         myui.updateEvent("Press <F> to finish reading.");
-                    }
-                    else if(gr.interactMessage() == 2)//TR
-                    {
+                    break;
+                    case 2: //TR
                         myui.updateEvent("...it appears to say something about spiders.");
                         myui.updateEvent("Press <F> to finish reading.");
-                    }
-                    else if(gr.interactMessage() == 3)//BR
-                    {
+                    break;
+                    case 3: //BR
                         myui.updateEvent("...it appears to say something about natives.");
                         myui.updateEvent("Press <F> to finish reading.");
-                    }
-                    else if(gr.interactMessage() == 4)//BL
-                    {
+                    break;
+                    case 4: //BL
                         myui.updateEvent("...it appears to say something about snakes.");
                         myui.updateEvent("Press <F> to finish reading.");
+                    break;
                     }
                 }
                 else if(x == 'D')
                 {
                     myui.updateEvent("You attempt to enter the dungeon...");
-                    if(gr.interactMessage() == 5)//TR
+                    switch (gr.interactMessage())
                     {
-                    }
-                    else if(gr.interactMessage() == 6)//BR
-                    {
-                    }
-                    else if(gr.interactMessage() == 7)//BL
-                    {
-                    }
-                    else if(gr.interactMessage() == 8)//TL
-                    {
-                    }
-                    else if(gr.interactMessage() == 9)//T
-                    {
-                    }
-                    else if(gr.interactMessage() == 10)//B
-                    {
+                    case 5: //TR
+                    break;
+                    case 6: //BR
+                    break;
+                    case 7: //BL
+                    break;
+                    case 8: //TL
+                    break;
+                    case 9: //T
+                    break;
+                    case 10: //B
+                    break;
                     }
                 }
                 break;
@@ -296,7 +283,7 @@ void gameLoop(Grid gr, Guy g)
         }
         else if(engaged == 'H')
         {
-            if((c=='q')|(c=='Q'))
+            if(c == 'q')
             {
                 myui.updateEvent("Game quitting.");
                 game_running = false;
@@ -305,7 +292,7 @@ void gameLoop(Grid gr, Guy g)
         }
         else if(engaged == 'M')
         {
-            if((c=='q')|(c=='Q'))
+            if(c == 'q')
             {
                 myui.updateEvent("Game quitting.");
                 game_running = false;
@@ -318,7 +305,7 @@ void gameLoop(Grid gr, Guy g)
         }
         else if(engaged == 'C')//Chest
         {//11 Starter C -- 12 BL C in Trees -- 13 TR C in Trees
-            if((c=='f')|(c=='F'))//Finished Looting
+            if(c == 'f')//Finished Looting
             {
                 g.addItem(coa);
                 g.addItem(cob);
@@ -328,7 +315,7 @@ void gameLoop(Grid gr, Guy g)
         }
         else if(engaged == 'S')//Sign
         {
-            if((c=='f')|(c=='F'))//Finished Reading
+            if(c=='f')//Finished Reading
             {
                 engaged = 'N';
             }
@@ -337,7 +324,6 @@ void gameLoop(Grid gr, Guy g)
         {
             engaged = 'N';
         }
-        system("stty cooked");//reset terminal to cooked mode
     }
 }
 
@@ -401,7 +387,7 @@ void mainMenu()
             cout<<t<<"Type: "<<g.getType()<<endl<<endl;
             cout<<t<<"Prepare for your adventure..."<<endl;
             breakTime(3);
-            gameLoop(gr, g); 
+            gameLoop(gr, g);
             break;
         }
         else if((choice=="L")||(choice=="l"))
@@ -439,5 +425,6 @@ int main()
 {
     cout<<endl<<'\t'<<"Welcome! Please input a choice."<<endl<<endl;
     mainMenu();
+
     return 0;
 }
