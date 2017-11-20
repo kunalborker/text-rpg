@@ -389,8 +389,7 @@ void mainMenu()
                     cout<<endl<<"Sorry, <"<<choice<<"> is invalid.  Press [H] for help."<<endl<<endl;
                 }
             }
-            char choicechar;
-            strcpy(&choicechar, choice.c_str());
+            char choicechar = choice[0];
             Grid gr(choicechar, "defaultmap.txt");
             options = "Choose the name of your character.";
             cout<<endl<<t<<options<<endl<<endl;
