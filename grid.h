@@ -14,14 +14,12 @@
 #include <vector>
 #include <map>
 
-using namespace std;
-
 class Grid
 {
     public:
-        Grid(char avatar, string map);
-        void printGrid();
-        string getDesc();
+        Grid(char avatar, std::string map);
+
+        std::string getDesc();
         void moveUp();
         void moveLeft();
         void moveRight();
@@ -29,16 +27,19 @@ class Grid
         char getAvatar() const;
         void teleportSpawn();
         char interactWhat();
-        void printSign();
-        void printChest();
+
         int interactMessage();
         int moves;
+
+        const std::string printGrid();
+        const std::string printSign();
+        const std::string printChest();
     private:
         int cr, cc, sr, sc, ir, ic;//Current row, current column of m_avatar
         //spawn row, spawn column
         //interacting row, interacting column
         char m_avatar;
-        string m_map, m_desc;
+        std::string m_map, m_desc;
         char m_iM[50][200];//member_variable_imported_Map
         char m_bS[29][59];//member_variable_bunny_Sign (Now Smugglers)
         char m_nS[29][59];//natives sign
@@ -46,7 +47,7 @@ class Grid
         char m_sS[29][59];//spiders sign
         void setCrCc(char);
         void loadEmpty(char);
-        string unit_desc(char);
+        std::string unit_desc(char);
 
         struct Interactable
         {
@@ -58,8 +59,8 @@ class Grid
             int row;
             int column;
         };
-        vector<Interactable> m_interactables;
-        map<char, string> m_unit_desc;
+        std::vector<Interactable> m_interactables;
+        std::map<char, std::string> m_unit_desc;
 };
 
 #endif

@@ -12,6 +12,7 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <ctime>//clock
 #include <time.h>
 #include <stdio.h>
@@ -20,11 +21,12 @@
 using namespace std;
 
 void clearScreen();
-void gameLoop();
 void mainMenu();
 void breakTime(int seconds);
 
-void gameLoop(Grid gr, Guy g)
+void displayEverything(UiAlignment align, const string& gridText, const string& uiMenuText, const string& uiText);
+
+void gameLoop(Grid gr, Guy g, UiAlignment align)
 {
     bool game_running = true;
     Ui myui;
@@ -54,22 +56,24 @@ void gameLoop(Grid gr, Guy g)
 
         if(engaged == 'N')//not engaged
         {
-            myui.displayUI(g, gr);
-            gr.printGrid();
+            displayEverything(align, gr.printGrid(), myui.printUImenu(align), myui.printUI(g, gr));
         }
         else//engaged
         {
-            myui.displayEngagedEvents();
             switch (engaged)
             {
             case 'H':
+                displayEverything(align, "", "", myui.printEngagedEvents());
             break;
             case 'M':
+                displayEverything(align, "", "", myui.printEngagedEvents());
             break;
             case 'P':
+                displayEverything(align, "", "", myui.printEngagedEvents());
             break;
             case 'C': //11 Starter C -- 12 BL C in Trees -- 13 TR C in Trees
-                gr.printChest();//15 out of 30 lines to be printed
+                displayEverything(align, gr.printChest(), "", myui.printEngagedEvents());
+
                 switch (gr.interactMessage()) //coa,cob,coc Chest Option A,B,C
                 {
                 case 11: //Print chest options
@@ -81,9 +85,10 @@ void gameLoop(Grid gr, Guy g)
                 }
             break;
             case 'S':
-                gr.printSign();
+                displayEverything(align, gr.printSign(), "", myui.printEngagedEvents());
             break;
             case 'D':
+                displayEverything(align, "", "", myui.printEngagedEvents());
             break;
             }
         }
@@ -334,9 +339,44 @@ void clearScreen()
 
 void mainMenu()
 {
-    char t = '\t';
-    cout<<">Choices: [N]ew Game [L]oad Game [H]elp [Q]uit\n"<<endl;
     string choice;
+    UiAlignment align;
+
+    cout << "The game can be played in two modes, [V]ertical and [H]orizontal\nWhich one do you want? ";
+    cin >> choice;
+    choice[0] = tolower(choice[0]);
+
+    switch (choice[0])
+    {
+    case 'v':
+        align = ALIGN_VERTICAL;
+    break;
+    case 'h':
+        align = ALIGN_HORIZONTAL;
+    break;
+    default:
+        cout << "Couldn't understand choice, defaulting to Vertical." << endl;
+        align = ALIGN_VERTICAL;
+    }
+
+    cin.ignore(100, '\n');
+    switch (align)
+    {
+    case ALIGN_VERTICAL:
+        cout << "Your terminal should be at least 80x64 characters in size.\n" << endl;
+    break;
+    case ALIGN_HORIZONTAL:
+        cout << "Your terminal should be at least 140x32 characters in size.\n" << endl;
+    break;
+    }
+    cout << "Press enter when ready to continue." << endl;
+    cin.get();
+
+    char t = '\t';
+
+    cout<<endl<<'\t'<<"Welcome! Please input a choice."<<endl<<endl;
+    cout<<">Choices: [N]ew Game [L]oad Game [H]elp [Q]uit\n"<<endl;
+
     while(cin>>choice)
     {
         if((choice=="N")||(choice=="n"))
@@ -387,7 +427,7 @@ void mainMenu()
             cout<<t<<"Type: "<<g.getType()<<endl<<endl;
             cout<<t<<"Prepare for your adventure..."<<endl;
             breakTime(3);
-            gameLoop(gr, g);
+            gameLoop(gr, g, align);
             break;
         }
         else if((choice=="L")||(choice=="l"))
@@ -421,9 +461,74 @@ void breakTime(int seconds)
     }
 }
 
+int countLines(const string& str)
+{
+    int counter = 0;
+    for (char c : str) {
+        if (c == '\n') {
+            ++counter;
+        }
+    }
+    return counter + 1;
+}
+
+void displayEverything(UiAlignment align, const string& gridText, const string& uiMenuText, const string& uiText)
+{
+    stringstream gridStream(gridText);
+    stringstream uiMenuStream(uiMenuText);
+    stringstream uiStream(uiText);
+
+    string grid, uiMenu, ui;
+
+    switch (align)
+    {
+    case ALIGN_VERTICAL:
+        while (getline(uiStream, ui)) {
+            cout << '\t' << ui << endl;
+        }
+        while (getline(uiMenuStream, uiMenu)) {
+            cout << uiMenu << endl;
+        }
+        cout << endl;
+        while (getline(gridStream, grid)) {
+            cout << grid << endl;
+        }
+    break;
+    case ALIGN_HORIZONTAL:
+    {
+        int uiLines = countLines(uiText);
+        int gridLines = countLines(gridText);
+
+        if (uiLines > gridLines) {
+            for (int i = 0; i < uiLines - gridLines; ++i) {
+                getline(uiStream, ui);
+                cout << string(64, ' ') << ui << endl;
+            }
+        }
+
+        while (getline(gridStream, grid)) {
+            uiMenu.clear();
+            ui.clear();
+            getline(uiMenuStream, uiMenu);
+            getline(uiStream, ui);
+
+            cout << grid;
+            if (grid.length() < 80) {
+                cout << string(80 - grid.length(), ' ');
+            }
+            cout << uiMenu;
+            if (uiMenu.length() < 8) {
+                cout << string(8 - uiMenu.length(), ' ');
+            }
+            cout << ui << endl;
+        }
+    }
+    break;
+    }
+}
+
 int main()
 {
-    cout<<endl<<'\t'<<"Welcome! Please input a choice."<<endl<<endl;
     mainMenu();
 
     return 0;

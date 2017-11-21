@@ -23,94 +23,149 @@ Ui::Ui()
     }
 }
 
-void Ui::displayUI(const Guy &g, Grid &gr)
+const string Ui::printUImenu(UiAlignment align) const
 {
+    string printOut;
+
+    switch (align)
+    {
+    case ALIGN_VERTICAL:
+        for (int i = 1; i <= 6; ++i) {
+            if (m_choice == i) {
+                printOut += "\t[" + to_string(i) + "]";
+            } else {
+                printOut += "\t" + to_string(i);
+            }
+        }
+        printOut += "\n";
+    break;
+    case ALIGN_HORIZONTAL:
+        for (int i = 1; i <= 6; ++i) {
+            if (m_choice == i) {
+                printOut += "[" + to_string(i) + "]\n\n\n\n\n";
+            } else {
+                printOut += to_string(i) + "\n\n\n\n\n";
+            }
+        }
+        printOut += "\n";
+    break;
+    }
+
+    return printOut;
+}
+
+const string Ui::printUI(const Guy &g, Grid &gr)
+{
+    string printOut;
+
     switch(m_choice)
     {
     case MenuChoice::m_none:
-        cout<<"\t1\t2\t3\t4\t5\t6\n"<<endl;
-        break;
+    break;
     case MenuChoice::m_key:
-        cout<<"\t\tKey\n";
-        cout<<"\t\t---\n";
-        displayKey(g, gr);
-        cout<<"\t1\t2\t3\t4\t[5]\t6\n"<<endl;
-        break;
+        printOut += "Key\n";
+        printOut += "---\n";
+        printOut += printKey(g, gr) + "\n";
+    break;
     case MenuChoice::m_controls:
-        cout<<"\t\tControls\n";
-        cout<<"\t\t--------\n";
-        displayControls();
-        cout<<"\t1\t2\t3\t[4]\t5\t6\n"<<endl;
-        break;
+        printOut += "Controls\n";
+        printOut += "--------\n";
+        printOut += printControls() + "\n";
+    break;
     case MenuChoice::m_desc:
-        g.printStats();
-        cout<<"\n\tSurroundings";
-        cout<<"\n\t------------\n";
-        cout<<gr.getDesc()<<endl<<endl;
-        g.printCondition();
-        cout<<endl<<endl;
-        cout<<"\t1\t2\t[3]\t4\t5\t6\n"<<endl;
-        break;
+        printOut += g.printStats() + "\n";
+        printOut += "Surroundings\n";
+        printOut += "------------\n";
+        printOut += gr.getDesc() + "\n\n";
+        printOut += g.printCondition() + "\n";
+    break;
     case MenuChoice::m_abilities:
-        cout<<"\tAbilities\n";
-        cout<<"\t---------\n";
-        g.displayAbilities();
-        cout<<"\t1\t[2]\t3\t4\t5\t6\n"<<endl;
-        break;
+        printOut += "Abilities\n";
+        printOut += "---------\n";
+        printOut += g.printAbilities() + "\n";
+    break;
     case MenuChoice::m_inventory:
-        cout<<"\tGear\n";
-        cout<<"\t----\n";
-        g.displayGear();
-        cout<<"\tGear Effects\n";
-        cout<<"\t------------\n";
-        g.displayEffects();
-        cout<<"\tInventory\n";
-        cout<<"\t---------\n";
-        g.displayInventory();
-        cout<<"\t[1]\t2\t3\t4\t5\t6\n"<<endl;
-        break;
+        printOut += "Gear\n";
+        printOut += "----\n";
+        printOut += g.printGear() + "\n";
+        printOut += "Gear Effects\n";
+        printOut += "------------\n";
+        printOut += g.printEffects() + "\n";
+        printOut += "Inventory\n";
+        printOut += "---------\n";
+        printOut += g.printInventory() + "\n";
+    break;
     case MenuChoice::m_events:
-        cout<<"\tEvents\n";
-        cout<<"\t------\n";
-        displayEvents();
-        cout<<"\t1\t2\t3\t4\t5\t[6]\n"<<endl;
-        break;
-    default:
-        break;
+        printOut += "Events\n";
+        printOut += "------\n";
+        printOut += printEvents() + "\n";
+    break;
     }
+
+    return printOut;
 }
 
-void Ui::displayKey(const Guy &g, const Grid &gr)
+const std::string Ui::printKey(const Guy &g, const Grid &gr)
 {
-    cout<<"\t\tT\tTree\n";
-    cout<<"\t\tH\tHouse\n";
-    cout<<"\t\tM\tMonster\n";
-    cout<<"\t\tP\tPerson\n";
-    cout<<"\t\tC\tChest\n";
-    cout<<"\t\tS\tSign\n";
-    cout<<"\t\tD\tDungeon\n";
-    cout<<"\t\t"<<gr.getAvatar()<<"\t"<<g.getName()<<endl<<endl;
+    string printOut;
+
+    printOut += "T\tTree\n";
+    printOut += "H\tHouse\n";
+    printOut += "M\tMonster\n";
+    printOut += "P\tPerson\n";
+    printOut += "C\tChest\n";
+    printOut += "S\tSign\n";
+    printOut += "D\tDungeon\n";
+    printOut += string(1, gr.getAvatar()) + "\t" + g.getName() + "\n";
+
+    return printOut;
 }
 
-void Ui::displayControls()
+const std::string Ui::printControls()
 {
-    cout<<"\t\tWASD\tMove Up/Left/Down/Right\n";
-    cout<<"\t\tI\tInteract\n\n";
-    cout<<"\t\t1\tInventory\n";
-    cout<<"\t\t2\tAbilities\n";
-    cout<<"\t\t3\tInformation\n";
-    cout<<"\t\t4\tControls\n";
-    cout<<"\t\t5\tArea Key\n";
-    cout<<"\t\t6\tEvent Log\n\n";
-    cout<<"\t\tQ\tQuit Game\n"<<endl;
+    string printOut;
+
+    printOut += "WASD\tMove Up/Left/Down/Right\n";
+    printOut += "I\tInteract\n\n";
+    printOut += "1\tInventory\n";
+    printOut += "2\tAbilities\n";
+    printOut += "3\tInformation\n";
+    printOut += "4\tControls\n";
+    printOut += "5\tArea Key\n";
+    printOut += "6\tEvent Log\n\n";
+    printOut += "Q\tQuit Game\n";
+
+    return printOut;
 }
 
-void Ui::checkDesc(Grid &gr)
+const std::string Ui::printEvents()
 {
-    if(m_choice == MenuChoice::m_desc)
+    string printOut;
+
+    for(int i=14; i>=0; --i)
     {
-        cout<<gr.getDesc()<<endl<<endl;
+        if(m_event[i] != " ")
+        {
+            printOut += m_event[i] + "\n";
+        }
     }
+
+    return printOut;
+}
+
+const std::string Ui::printEngagedEvents()
+{
+    string printOut;
+
+    for(int i=5; i>=0; --i)
+    {
+        if(m_event[i] != " ")
+        {
+            printOut += m_event[i] + "\n";
+        }
+    }
+
+    return printOut;
 }
 
 void Ui::toggle(int t)
@@ -129,28 +184,3 @@ void Ui::updateEvent(const string &event)
     string eventtobeadded = "(" + currenttime + ") " + event;
     m_event[0] = eventtobeadded;
 }
-
-void Ui::displayEvents()
-{
-    for(int i=14; i>=0; --i)
-    {
-        if(m_event[i] != " ")
-        {
-            cout<<'\t'<<m_event[i]<<'\n';
-        }
-    }
-    cout<<'\n';
-}
-
-void Ui::displayEngagedEvents()
-{
-    for(int i=5; i>=0; --i)
-    {
-        if(m_event[i] != " ")
-        {
-            cout<<'\t'<<m_event[i]<<'\n';
-        }
-    }
-    cout<<"\n\n"<<endl;//None House Monster Person Chest Sign Dungeon
-}
-
