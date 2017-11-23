@@ -120,9 +120,9 @@ void Guy::modifyCondition(char HUT, int amount)//Health hUnger Thirst
     }
 }
 
-void Guy::printStat(int x) const
+const string Guy::printStat(int x) const
 {
-    cout<<m_stat_name[x]<<": "<<m_stat_level[x];
+    return string(m_stat_name[x]) + ": " + to_string(m_stat_level[x]);
 }
 
 int Guy::getTypeInt()
@@ -130,8 +130,10 @@ int Guy::getTypeInt()
     return m_type;
 }
 
-void Guy::displayInventory() const
+const string Guy::printInventory() const
 {
+    string printOut;
+
     char hotkeys[6];
     hotkeys[0] = 'F';
     hotkeys[1] = 'G';
@@ -141,36 +143,45 @@ void Guy::displayInventory() const
     hotkeys[5] = 'L';
     for(int h=0; h<6; h++)
     {
-        cout<<'\t'<<hotkeys[h]<<"\t\t"<<m_inventory[h]<<'\n';
+        printOut += string(1, hotkeys[h]) + "\t\t" + m_inventory[h] + "\n";
     }
-    cout<<endl;
+
+    return printOut;
 }
 
-void Guy::displayGear() const
+const string Guy::printGear() const
 {
-    cout<<"\tHead\t\t"<<m_gear[0]<<'\n';
-    cout<<"\tLeft-hand\t"<<m_gear[1]<<'\n';
-    cout<<"\tRight-hand\t"<<m_gear[2]<<'\n';
-    cout<<"\tTop\t\t"<<m_gear[3]<<'\n';
-    cout<<"\tBottom\t\t"<<m_gear[4]<<'\n';
-    cout<<"\tRing\t\t"<<m_gear[5]<<'\n';
-    cout<<"\tAmulet\t\t"<<m_gear[6]<<'\n';
-    cout<<"\tGloves\t\t"<<m_gear[7]<<'\n';
-    cout<<"\tBoots\t\t"<<m_gear[8]<<'\n';
-    cout<<"\tBack\t\t"<<m_gear[9]<<'\n';
-    cout<<endl;
+    string printOut;
+
+    printOut += "Head\t\t" + m_gear[0] + "\n";
+    printOut += "Left-hand\t" + m_gear[1] + "\n";
+    printOut += "Right-hand\t" + m_gear[2] + "\n";
+    printOut += "Top\t\t" + m_gear[3] + "\n";
+    printOut += "Bottom\t\t" + m_gear[4] + "\n";
+    printOut += "Ring\t\t" + m_gear[5] + "\n";
+    printOut += "Amulet\t\t" + m_gear[6] + "\n";
+    printOut += "Gloves\t\t" + m_gear[7] + "\n";
+    printOut += "Boots\t\t" + m_gear[8] + "\n";
+    printOut += "Back\t\t" + m_gear[9] + "\n";
+
+    return printOut;
 }
 
-void Guy::displayEffects() const
+const string Guy::printEffects() const
 {
-    cout<<'\t'<<m_stat_name[1]<<" Boost\t+"<<calcAttBoost()<<'\n';
-    cout<<'\t'<<m_stat_name[2]<<" Boost\t+"<<calcDefBoost()<<'\n';
-    cout<<'\t'<<m_stat_name[3]<<" Boost\t+"<<calcHpBoost()<<'\n';
-    cout<<endl;
+    string printOut;
+
+    printOut += m_stat_name[1] + " Boost\t+" + to_string(calcAttBoost()) + "\n";
+    printOut += m_stat_name[2] + " Boost\t+" + to_string(calcDefBoost()) + "\n";
+    printOut += m_stat_name[3] + " Boost\t+" + to_string(calcHpBoost()) + "\n";
+
+    return printOut;
 }
 
-void Guy::displayAbilities() const
+const string Guy::printAbilities() const
 {
+    string printOut;
+
     char hotkey[5];
     hotkey[0] = 'Z';
     hotkey[1] = 'X';
@@ -179,15 +190,17 @@ void Guy::displayAbilities() const
     hotkey[4] = 'B';
     for(int i = 0; i<5; i++)
     {
-        cout<<'\t'<<hotkey[i]<<'\t'<<m_abilities[i]<<'\n';
+        printOut += string(1, hotkey[i]) + "\t" + m_abilities[i] + "\n";
     }
-    cout<<endl;
+
+    return printOut;
 }
 
-void Guy::printStats() const
+const string Guy::printStats() const
 {
+    string printOut;
+
     int i = 0;
-    cout<<endl;
     int stat_count = 0;
     for(int c=0; c<50; c++)
     {
@@ -200,29 +213,31 @@ void Guy::printStats() const
     {
         if(stat_count>0)
         {
-            cout<<"\tLevels\n";
-            cout<<"\t------\n\t";
+            printOut += "Levels\n";
+            printOut += "------\n";
         }
         for(int collumn=1; collumn<=5; collumn++)
         {
             if(stat_count>0)
             {
-            printStat(i);
-            cout<<" ";
+            printOut += printStat(i);
+            printOut += " ";
             i++;
             stat_count--;
             }
         }
         if(stat_count > 0)
         {
-            cout<<endl;
+            printOut +=  "\n";
         }
         if(stat_count == 0)
         {
-            cout<<endl;
+            printOut += "\n";
             break;
         }
     }
+
+    return printOut;
 }
 
 string Guy::getBars(int c, int m) const//current, max
@@ -232,13 +247,17 @@ string Guy::getBars(int c, int m) const//current, max
     return "[" + string(percent/10, 'X') + string(10 - percent/10, '_') + "]";
 }
 
-void Guy::printCondition() const
+const string Guy::printCondition() const
 {
-    cout<<"\tCondition\n";
-    cout<<"\t---------\n";
-    cout<<"\tHealth: "<<getBars(m_currentHealth, (m_maxHealth+calcHpBoost()))<<" "<<m_currentHealth<<"/"<<(m_maxHealth+calcHpBoost())<<endl;
-    cout<<"\tHunger: "<<getBars(m_currentHunger, 100)<<" "<<m_currentHunger<<"%"<<endl;
-    cout<<"\tThirst: "<<getBars(m_currentThirst, 100)<<" "<<m_currentThirst<<"%"<<endl;
+    string printOut;
+
+    printOut += "Condition\n";
+    printOut += "---------\n";
+    printOut += "Health: " + getBars(m_currentHealth, (m_maxHealth+calcHpBoost())) + " " + to_string(m_currentHealth) + "/" + to_string(m_maxHealth+calcHpBoost()) + "\n";
+    printOut += "Hunger: " + getBars(m_currentHunger, 100) + " " + to_string(m_currentHunger) + "%\n";
+    printOut += "Thirst: " + getBars(m_currentThirst, 100) + " " + to_string(m_currentThirst) + "%\n";
+
+    return printOut;
 }
 
 void Guy::addStat(string name)

@@ -11,55 +11,59 @@
 #include <iostream>
 #include <string>
 
-using namespace std;
-
 class Guy
 {
     public:
-        Guy(string name, int type);
-        void printStat(int) const;//Prints stat #int
-        void printStats() const;//Prints all stats
-        void addStat(string);//Adds a statistic
-        void advanceLevel(string);
-        string getName() const;
-        string getType() const;
+        Guy(std::string name, int type);
+
+        void addStat(std::string);//Adds a statistic
+        void advanceLevel(std::string);
+        std::string getName() const;
+        std::string getType() const;
         int getTypeInt();
-        void displayAbilities() const;
-        void displayInventory() const;
-        void displayGear() const;
-        void displayEffects() const;//Gear Effects
-        bool addItem(string);
+
+        bool addItem(std::string);
         bool useItem(char);
-        void printCondition() const;
+
         void modifyCondition(char, int);//Health/Hunger/Thirst
         bool starving();
         bool dehydrating();
         int calcAttBoost() const;
         int calcDefBoost() const;
         int calcHpBoost() const;
-        void addPet(const string &);
-        bool checkPet(const string &);
+        void addPet(const std::string &);
+        bool checkPet(const std::string &);
+
+        const std::string printStat(int) const;//Prints stat #int
+        const std::string printStats() const;//Prints all stats
+
+        const std::string printAbilities() const;
+        const std::string printInventory() const;
+        const std::string printGear() const;
+        const std::string printEffects() const;//Gear Effects
+
+        const std::string printCondition() const;
     private:
-        string m_name, m_typename;
-        string m_abilities[5];
-        string m_inventory[6];
-        string m_pets[10];
-        string m_gear[10];//Head LH RH Top Bottom Ring Ammy Gloves Boots Back
+        std::string m_name, m_typename;
+        std::string m_abilities[5];
+        std::string m_inventory[6];
+        std::string m_pets[10];
+        std::string m_gear[10];//Head LH RH Top Bottom Ring Ammy Gloves Boots Back
         //Basic/Rusty
         int m_type, m_maxHealth, m_currentHealth, m_currentThirst, m_currentHunger;
-        string m_stat_name[50];
+        std::string m_stat_name[50];
         int m_stat_level[50];
         bool spiderv, snakev;//is_vaccinated?
-        int getStatNumber(string);
+        int getStatNumber(std::string);
         void checkClass();
         void setArcher();//m_type == 0
         void setWarrior();//m_type == 1
         void setAssassin();//m_type == 2
         void setWizard();//m_type == 3
-        string m_getName();
-        string m_getType();
+        std::string m_getName();
+        std::string m_getType();
         void errorCode(int);
-        string getBars(int, int) const;
+        std::string getBars(int, int) const;
 };
 
 #endif

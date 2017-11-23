@@ -15,8 +15,6 @@
 #include "guy.h"
 #include <time.h>
 
-using namespace std;
-
 enum MenuChoice
 {
     m_none      = 0,
@@ -28,23 +26,34 @@ enum MenuChoice
     m_events    = 6
 };
 
+enum UiAlignment
+{
+    ALIGN_VERTICAL,
+    ALIGN_HORIZONTAL
+};
+
 class Ui
 {
     public:
         Ui();
         time_t start = time(0);
-        void displayKey(const Guy &g, const Grid &gr);
-        void displayControls();
-        void checkDesc(Grid &);//Description
         void toggle(int);
-        void displayUI(const Guy &g, Grid &gr);
-        void updateEvent(const string &);
-        void displayEngagedEvents();
+
+        const std::string printUImenu(UiAlignment align) const;
+        const std::string printUI(const Guy &g, Grid &gr);
+
+        const std::string printKey(const Guy &g, const Grid &gr);
+        const std::string printControls();
+
+        const std::string printEvents();
+        const std::string printEngagedEvents();
         //shows events for current engagement
+
+        void updateEvent(const std::string &);
+
     private:
         MenuChoice m_choice;
-        string m_event[15];
-        void displayEvents();
+        std::string m_event[15];
 };
 
 #endif

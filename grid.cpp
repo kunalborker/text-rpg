@@ -87,54 +87,38 @@ int Grid::interactMessage()
     return 0;
 }
 
-void Grid::printSign()
+const string Grid::printSign()
 {
+    string printOut;
+
     /** This approach repeats a bit of code but it isn't good having unnecessary
         branching( if, switch, etc ) inside long loops.                          */
 
     switch (interactMessage())
     {
     case 1: //smugglers TL
-        for(int row = 0; row < 29; row++)
-        {
-            for(int column = 0; column < 59; column++)
-            {
-                cout<<m_bS[row][column];
-            }
-            cout<<endl;
+        for(int row = 0; row < 29; row++) {
+            printOut += string(m_bS[row], m_bS[row] + 60) + "\n";
         }
     break;
     case 2: //spiders TR
-        for(int row = 0; row < 29; row++)
-        {
-            for(int column = 0; column < 59; column++)
-            {
-                cout<<m_sS[row][column];
-            }
-            cout<<endl;
+        for(int row = 0; row < 29; row++) {
+            printOut += string(m_sS[row], m_sS[row] + 60) + "\n";
         }
     break;
     case 3: //BR natives
-        for(int row = 0; row < 29; row++)
-        {
-            for(int column = 0; column < 59; column++)
-            {
-                cout<<m_nS[row][column];
-            }
-            cout<<endl;
+        for(int row = 0; row < 29; row++) {
+            printOut += string(m_nS[row], m_nS[row] + 60) + "\n";
         }
     break;
     case 4: //BL snakes
-        for(int row = 0; row < 29; row++)
-        {
-            for(int column = 0; column < 59; column++)
-            {
-                cout<<m_vS[row][column];
-            }
-            cout<<endl;
+        for(int row = 0; row < 29; row++) {
+            printOut += string(m_vS[row], m_vS[row] + 60) + "\n";
         }
     break;
     }
+
+    return printOut;
 }
 
 void Grid::teleportSpawn()
@@ -163,8 +147,10 @@ void Grid::setCrCc(char startingposition)
     }
 }
 
-void Grid::printGrid()
+const string Grid::printGrid()
 {
+    string printOut;
+
     int row, column;
     m_iM[cr][cc] = m_avatar;
 
@@ -174,9 +160,9 @@ void Grid::printGrid()
     row = cr - 15;
 
     // Prints empty rows above grid
-    for (; row < 0; row++)
-    {
-        cout<<endl;
+    if (row < 0) {
+        printOut += string(abs(row), '\n');
+        row = 0;
     }
 
     int maxRow = min(50, cr + 14);
@@ -185,26 +171,25 @@ void Grid::printGrid()
         column = cc - 30;
 
         // Prints empty columns left of grid
-        for (; column < 0; column++)
-        {
-            cout<<' ';
+        if (column < 0) {
+            printOut += string(abs(column), ' ');
+            column = 0;
         }
 
         int maxColumn = min(200, cc + 29);
         for (; column < maxColumn; column++)
         {
-            cout<<m_iM[row][column];
+            printOut += m_iM[row][column];
         }
-        cout<<endl;
-
-        // The empty columns right of grid are printed automatically
+        printOut += '\n';
     }
 
     // Prints empty rows below grid
-    for (; row < cr + 14; row++)
-    {
-        cout<<endl;
+    if (row < cr + 14) {
+        printOut += string(cr + 14 - row, '\n');
     }
+
+    return printOut;
 }
 
 void Grid::moveUp()
@@ -263,7 +248,7 @@ string Grid::getDesc() // why does this function mutate as well as access?
     left = unit_desc(m_iM[cr][cc - 1]);
     right = unit_desc(m_iM[cr][cc + 1]);
     down = unit_desc(m_iM[cr + 1][cc]);
-    m_desc = "\tAbove: " + up + "\tLeft: " + left + "\n\tBelow: " + down + "\tRight: " + right;
+    m_desc = "Above: " + up + "\tLeft: " + left + "\nBelow: " + down + "\tRight: " + right;
     //cout<<"IC:"<<ic<<"IR:"<<ir<<endl; //interacted-last shortcut viewing
     return m_desc;
 }
@@ -323,45 +308,42 @@ string Grid::unit_desc(char unit)
     return desc;
 }
 
-void Grid::printChest()
+const string Grid::printChest()
 {//interactMessage() == 11 (starter) 12 (snakes) 13 (spiders)
-    for(int a = 1; a < 15; a++)
+    string printOut;
+
+    printOut += "\n\n\n\n\n\n\n";
+    switch (interactMessage())
     {
-        if(a != 7)
-        {
-            cout<<endl;
-        }
-        else
-        {
-            if(interactMessage() == 11)//Starter Chest
-            {
-                cout<<"            A hidden golden chest."<<endl;
-            }
-            else if(interactMessage() == 12)//Snake Boss
-            {
-                cout<<"                A slimy chest."<<endl;
-            }
-            else if(interactMessage() == 13)//Spider Boss
-            {
-                cout<<"             A cobweb-covered chest."<<endl;
-            }
-        }
+    case 11: //Starter Chest
+        printOut += "            A hidden golden chest.\n";
+    break;
+    case 12: //Snake Boss
+        printOut += "                A slimy chest.\n";
+    break;
+    case 13: //Spider Boss
+        printOut += "             A cobweb-covered chest.\n";
+    break;
     }
-    cout<<"          _,---.-.---------------.-.---,_"<<endl;//15 lines
-    cout<<"     _.-'`====/o/=================/o/====`'-._"<<endl;
-    cout<<"   .'========/o/===================/o/========'."<<endl;
-    cout<<"  |---------)~(---------------------)~(---------|"<<endl;
-    cout<<"   /________/o/________.---.________/o/________/"<<endl;
-    cout<<"    |=======/o/========) ? (========/o/=======|"<<endl;
-    cout<<"    |       | |       (  '  )       | |       |"<<endl;
-    cout<<"    |=======|o|========'---'========|o|=======|"<<endl;
-    cout<<"    |       | |         ____        | |       |"<<endl;
-    cout<<"    |=======|o|========)X| /(=======|o|=======|"<<endl;
-    cout<<"    |       | |       |XX|/ /|      | |       |"<<endl;
-    cout<<"    |=======|o|=======/--/ / /======|o|=======|"<<endl;
-    cout<<"    |       | |        '/_/.'       | |       |"<<endl;
-    cout<<"    lc======|o|=====================|o|=======|"<<endl;
-    cout<<"    '-------'-'---------------------'-'-------'"<<endl;
+    printOut += "\n\n\n\n\n\n";
+
+    printOut += "          _,---.-.---------------.-.---,_          \n"; //15 lines
+    printOut += "     _.-'`====/o/=================/o/====`'-._     \n";
+    printOut += "   .'========/o/===================/o/========'.   \n";
+    printOut += "  |---------)~(---------------------)~(---------|  \n";
+    printOut += "   /________/o/________.---.________/o/________/   \n";
+    printOut += "    |=======/o/========) ? (========/o/=======|    \n";
+    printOut += "    |       | |       (  '  )       | |       |    \n";
+    printOut += "    |=======|o|========'---'========|o|=======|    \n";
+    printOut += "    |       | |         ____        | |       |    \n";
+    printOut += "    |=======|o|========)X| /(=======|o|=======|    \n";
+    printOut += "    |       | |       |XX|/ /|      | |       |    \n";
+    printOut += "    |=======|o|=======/--/ / /======|o|=======|    \n";
+    printOut += "    |       | |        '/_/.'       | |       |    \n";
+    printOut += "    lc======|o|=====================|o|=======|    \n";
+    printOut += "    '-------'-'---------------------'-'-------'    \n";
+
+    return printOut;
 }
 void Grid::loadEmpty(char a)
 {
