@@ -32,10 +32,10 @@ Grid::Grid(char avatar, string map)
     ic = 0;
     moves = 0;
     setCrCc('Z');
-    ifstream smugglerz ("smugglers.txt");
-    ifstream spiderz ("spiders.txt");
-    ifstream nativez ("natives.txt");
-    ifstream snakez ("snakes.txt");
+    ifstream smugglerz ("./txt/signs/smugglers.txt");
+    ifstream spiderz ("./txt/signs/spiders.txt");
+    ifstream nativez ("./txt/signs/natives.txt");
+    ifstream snakez ("./txt/signs/snakes.txt");
     for (row = 0; row<29; row++)
     {
         for(column = 0; column<59; column++)

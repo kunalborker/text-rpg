@@ -416,7 +416,7 @@ void mainMenu()
                 }
             }
             char choicechar = choice[0];
-            Grid gr(choicechar, "defaultmap.txt");
+            Grid gr(choicechar, "./txt/maps/defaultmap.txt");
             options = "Choose the name of your character.";
             cout<<endl<<t<<options<<endl<<endl;
             cin.ignore();//ignores leading whitespace
