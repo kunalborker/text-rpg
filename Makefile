@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++11 -Wall -W -pedantic
+CXXFLAGS = -std=gnu++11 -Wall -W -pedantic
 
 DEPDIR := .obj
 $(shell mkdir -p $(DEPDIR) >/dev/null)
