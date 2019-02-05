@@ -17,4 +17,11 @@ bat label: 'SonarQube', script: 'C:\\sonar-scanner\\bin\\bin\\sonar-scanner.bat 
 stage('Upload'){
 step([$class: 'NexusArtifactUploader', artifacts: [[artifactId: 'text-rpg', classifier: '', file: 'game.exe', type: 'exe']], credentialsId: 'nexus', groupId: 'CPP', nexusUrl: 'localhost:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'CPP', version: '1.0.0'])
 }
+ 
+stage('Deploy'){  
+sh label: '', script: '''#!/bin/bash
+cd  
+wget http://localhost:8081/repository/CPP/CPP/text-rpg/1.0.0/text-rpg-1.0.0.exe
+'''  
+}  
 }
