@@ -20,7 +20,6 @@ step([$class: 'NexusArtifactUploader', artifacts: [[artifactId: 'text-rpg', clas
  
 stage('Deploy'){  
 sh label: '', script: '''#!/bin/bash
-cd  
 wget http://localhost:8081/repository/CPP/CPP/text-rpg/1.0.0/text-rpg-1.0.0.exe
 '''  
 }  
